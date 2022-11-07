@@ -1,0 +1,24 @@
+Multicamera Vehicle tracking system
+
+
+Plan działania: 
+Stworzenie bazy samochodów z wyliczonymi histogramami (zdjęcie + binaryzacja -> histogram wycinka samochodu). 
+	
+Gdy obiekt wjedzie w obszar kamery, histogram liczony jest na bieżąco po znalezieniu się w całości w polu widzenia. Wyliczony histogram sprawdzany jest w bazie, na tej podstawie stwierdzamy który to obiekt i nadajemy ID. Informacja na temat wykrytego obiektu zapisywana jest w csv/txt, a ten wysyłany jest do drugiej RPI. 
+
+Maska obrazu + cały obraz, indeksowanie elementów na masce, i wyliczenie historamu
+
+TODO:
+	- Przeliczanie histogramu - DONE
+	- Zapis i odczyt z pliku tych histogramów 
+
+Zapis + odczyt z pliku. Baza histogramów + 
+
+
+To mam zrobić:
+
+Jedna funkcja, która z csv wczytuje histogramy z bazy - zmienne globalne? 
+
+Druga która przyjmuje histogramy z programu, historam obecnie przetwarzany, nadany numer pojazdu - porównuje który histogram jest najbardziej podobny. - zwroci kyory to jest obiekt
+
+Identyfikuje, sprawdza czy jest w bazie jak nie ma to dodaje do bazy i w pliku do wysłania bo jak już jest to nic nie rób.  
