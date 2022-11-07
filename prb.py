@@ -2,6 +2,7 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
 import time 
+from hist import histogramRGB
 
 
 def get_band_img(mask, frame, lst_bound):
@@ -26,6 +27,7 @@ def get_band_img(mask, frame, lst_bound):
         if img_bound.shape[0] > 140 and img_bound.shape[1] > 150:
             lst_bound.append(img_bound)
             cv.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+            
     cv.imshow('Contours', frame)
 
 
@@ -42,12 +44,23 @@ def draw_countur(mask, frame):
         color = (0, 0 ,255)
         cv.rectangle(frame, (int(boundRect[i][0]), int(boundRect[i][1])), \
           (int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])), color, 2)
+     
+# KK 07.11.-----------------------------------------------------------------
+            
+        x1 = int(boundRect[i][0])
+        y1 = int(boundRect[i][1])
+        frame = cv.putText(frame, str(i), (x1,y1), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 5, cv.LINE_AA)
+    # cv.imwrite('frame1.png', frame)
+
+
+# -----------------------------------------------------------------------------    
+
     cv.imshow('Contours', frame)
 
 
 def main():
-    
-    cap = cv.VideoCapture("sample1.mp4")
+    #cap = cv.VideoCapture("sample1.mp4")
+    cap = cv.VideoCapture(0)
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
@@ -101,4 +114,5 @@ def main():
         plt.figure()
         plt.imshow(lst_bound[i])
         plt.show()
+        histogramRGB(lst_bound[i])
 main()
