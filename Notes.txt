@@ -21,4 +21,4 @@ Jedna funkcja, która z csv wczytuje histogramy z bazy - zmienne globalne?
 
 Druga która przyjmuje histogramy z programu, historam obecnie przetwarzany, nadany numer pojazdu - porównuje który histogram jest najbardziej podobny. - zwroci kyory to jest obiekt
 
-Identyfikuje, sprawdza czy jest w bazie jak nie ma to dodaje do bazy i w pliku do wysłania bo jak już jest to nic nie rób.  
+Identyfikuje, sprawdza czy jest w bazie jak nie ma to dodaje do bazy i w pliku do wysłania bo jak już jest to nic nie rób.   
