@@ -176,8 +176,8 @@ int main()
  
     tcp_client.setBlocking(false);
     
-    TXT_Sender txt_sender("Sended_txt", "PD_", "txt", tcp_client);
-    TXT_Reciver txt_reciver("Recived_txt", "PD_", "txt", tcp_client);
+    TXT_Sender txt_sender("../Sended_txt", "PD_", "txt", tcp_client);
+    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "txt", tcp_client);
     
     while(true){
         sf::Time time = clock.getElapsedTime();
