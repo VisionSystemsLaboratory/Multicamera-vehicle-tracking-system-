@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_server/Sended_struct.cpp
+Sended_struct.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_server/Sended_struct.hpp
+iostream
+-
+
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_server/Sended_struct.hpp
+SFML/Network.hpp
+-
+
