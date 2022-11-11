@@ -1,0 +1,3 @@
+/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/rebuild_cache.dir
+/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/Inzynierka.dir
+/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/edit_cache.dir
