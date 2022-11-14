@@ -110,14 +110,14 @@ int main() {
     }
     tcp_socket.setBlocking(false);
 
-    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "txt", tcp_socket);
-    TXT_Sender txt_sender("../Sended_txt", "PD_", "txt", tcp_socket);
+    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "csv", tcp_socket);
+    TXT_Sender txt_sender("../Sended_txt", "PD_", "csv", tcp_socket);
 
     while(true){
         sf::Time time = clock.getElapsedTime();
 
         //if(time.asMilliseconds() > 1000){
-        if(time.asMilliseconds() > 2){
+        if(time.asMilliseconds() > 1){
             clock.restart();
             // Nadawanie
             auto status = txt_sender.check_and_send();

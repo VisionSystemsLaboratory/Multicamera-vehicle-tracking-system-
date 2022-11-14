@@ -176,8 +176,8 @@ int main()
  
     tcp_client.setBlocking(false);
     
-    TXT_Sender txt_sender("../Sended_txt", "PD_", "txt", tcp_client);
-    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "txt", tcp_client);
+    TXT_Sender txt_sender("../Sended_txt", "PD_", "csv", tcp_client);
+    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "csv", tcp_client);
     
     
     
@@ -186,7 +186,7 @@ int main()
         sf::Time time = clock.getElapsedTime();
 
         //if(time.asMilliseconds() > 1000){
-        if(time.asMilliseconds() > 2){
+        if(time.asMilliseconds() > 1){
             clock.restart();
 
             // Nadawanie
