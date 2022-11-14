@@ -102,7 +102,7 @@ int main() {
 
 
             if(status == sf::Socket::Status::Done) {
-                std::cout << "TCP - Procedura nawiązywania kontaktu zakończona" << std::endl;
+                std::cout << "TCP - Procedura nawiązywania kontaktu zakończona " << std::endl;
                 break;
             }
 
