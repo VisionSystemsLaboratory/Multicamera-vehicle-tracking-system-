@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.cpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.cpp
 TXT_Sender.hpp
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.hpp
 utility
 -
 
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.hpp
 SFML/Network.hpp
 -
 sstream
@@ -22,9 +22,9 @@ fstream
 iostream
 -
 main_functions.hpp
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main_functions.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main_functions.hpp
 
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main.cpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main.cpp
 iostream
 -
 cstdlib
@@ -36,19 +36,19 @@ SFML/System.hpp
 SFML/Window.hpp
 -
 sended_struct.hpp
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.hpp
 main_functions.hpp
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main_functions.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main_functions.hpp
 TXT_Sender.hpp
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.hpp
 
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main_functions.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main_functions.hpp
 
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.cpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.cpp
 sended_struct.hpp
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.hpp
 
-/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.hpp
+/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.hpp
 SFML/Network.hpp
 -
 

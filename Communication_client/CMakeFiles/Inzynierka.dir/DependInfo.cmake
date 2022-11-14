@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.cpp" "/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/Inzynierka.dir/TXT_Sender.cpp.o"
-  "/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main.cpp" "/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/Inzynierka.dir/main.cpp.o"
-  "/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.cpp" "/home/pi/Documents/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/Inzynierka.dir/sended_struct.cpp.o"
+  "/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/TXT_Sender.cpp" "/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/Inzynierka.dir/TXT_Sender.cpp.o"
+  "/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/main.cpp" "/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/Inzynierka.dir/main.cpp.o"
+  "/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/sended_struct.cpp" "/home/wpr/Dokumenty/CPP/PD/Multicamera-vehicle-tracking-system-/Communication_client/CMakeFiles/Inzynierka.dir/sended_struct.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
