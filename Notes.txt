@@ -1,5 +1,6 @@
 Multicamera Vehicle tracking system
 
+pojedynczy histogram - macierz 256x3 (256 wierszy, 3 kolumny)
 Baza samochodów - pliki csv zawierające histogramy samochodów.
 Baza wykrytych samochodów - pliki txt/csv zawierające ID oraz kolor/nazwę obiektu z bazy samochodów.
 
@@ -11,4 +12,5 @@ Działanie programu:
 4. Aplikacja sprawdza czy autko jest już w bazie wykrytych samochodów.
 5. Jeżeli jest to nic się nie dzieje (ewentualnie podmienia histogram na bardziej aktualny).
    Jeśli nie ma to tworzony jest nowy plik wykrytego samochodu zawierający dane o nim.
+6. Usunięcie samochodu z bazy wykrytych samochodów (gdy histogram z bazy nie pasuje do żadnego auta).
 x. Pliki są udostępniane pomiędzy RPi gdy tylko nowy plik pojawi się w folderze.
