@@ -117,7 +117,7 @@ int main() {
         sf::Time time = clock.getElapsedTime();
 
         //if(time.asMilliseconds() > 1000){
-        if(time.asMilliseconds() > 1){
+        if(time.asMilliseconds() > 2){
             clock.restart();
             // Nadawanie
             auto status = txt_sender.check_and_send();
