@@ -186,7 +186,7 @@ int main()
         sf::Time time = clock.getElapsedTime();
 
         //if(time.asMilliseconds() > 1000){
-        if(time.asMilliseconds() > 1){
+        if(time.asMilliseconds() > 5){
             clock.restart();
 
             // Nadawanie
