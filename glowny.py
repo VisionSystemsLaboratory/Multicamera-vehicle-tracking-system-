@@ -37,7 +37,7 @@ def main():
             print("Can't receive frame (stream end?). Exiting ...")
         else:
             # Pobieranie ramki z tłem                                  
-            base =cv.resize(frame,size)                                         # Tło o zminionym rozmiarze
+            base =cv.resize(frame, size)                                         # Tło o zminionym rozmiarze
             gray_base = cv.cvtColor(base, cv.COLOR_BGR2GRAY)                    # Konwersja do barw odcieni szarości
 
 # --------------- Główna pętla programu ---------------------------------------

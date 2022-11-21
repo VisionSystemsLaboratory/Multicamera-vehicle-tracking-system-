@@ -27,8 +27,8 @@ def load_hists():
     for filename in filenames:
         print(filename)
         with open(f"Hists\\{filename}", newline='') as f:
-            reader = pd.read_csv(f)
-            yield reader.values
+            reader = pd.read_csv(f).values
+            yield reader[:, 1:4]
 
 
 def assign_object_id(target, histbase):
@@ -56,12 +56,10 @@ def assign_object_id(target, histbase):
 
     return object_id
 
-
-with open("Hists\\target.csv", newline='') as f:
-    car = pd.read_csv(f).values
-
+histogramRGB = np.zeros((256, 3))
 hbase = list(load_hists())
-assign_object_id(car, hbase)
+
+print(assign_object_id(histogramRGB, hbase))
 
 
 
@@ -110,5 +108,4 @@ def clear_to_send():
         with open("ToSend/tosend.txt", 'w') as file:
             file.close()
             
-assign_object_id()
 # clear_to_send()

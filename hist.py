@@ -63,33 +63,33 @@ def hist_to_csv(frame, mask):
     for i, histRGB in enumerate(histsRGB):
         pd.DataFrame(histRGB).to_csv(f"Hists/auto_{i}.csv")
     
-# img = cv2.imread("shapes.png")
-# img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+img = cv2.imread("shapes.png")
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-# imgMask = cv2.imread("shapesMask.png")
-# imgMask = cv2.cvtColor(imgMask, cv2.COLOR_BGR2RGB)
-# imgMask = imgMask[:, :, 0]
+imgMask = cv2.imread("shapesMask.png")
+imgMask = cv2.cvtColor(imgMask, cv2.COLOR_BGR2RGB)
+imgMask = imgMask[:, :, 0]
 
-# fig, ax = plt.subplots(1, 2)
-# ax[0].imshow(img)
-# ax[1].imshow(imgMask, cmap='gray')
+fig, ax = plt.subplots(1, 2)
+ax[0].imshow(img)
+ax[1].imshow(imgMask, cmap='gray')
 
-# histA = getHistogramsRGB(img, imgMask)
+histA = getHistogramsRGB(img, imgMask)
 # histB = fastHistogramsRGB(img, imgMask)
-# # histC = fastHistogramsRGB2(img, imgMask)
+# histC = fastHistogramsRGB2(img, imgMask)
 # print(np.all(histA == histB))
-
-frame = cv2.imread("img.jpg")
-frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
-
-threshold = 110
-binary = np.uint8(gray_frame < threshold) * 255
-kernel = np.ones((5, 5), np.uint8)
-dilated_mask = cv2.dilate(binary, kernel, iterations=5)
-mask = cv2.erode(dilated_mask, kernel, iterations=5)
-plt.figure()
-plt.imshow(binary)
-hist_to_csv(frame, mask)
+print(histA)
+# frame = cv2.imread("img.jpg")
+# frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+# gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+#
+# threshold = 110
+# binary = np.uint8(gray_frame < threshold) * 255
+# kernel = np.ones((5, 5), np.uint8)
+# dilated_mask = cv2.dilate(binary, kernel, iterations=5)
+# mask = cv2.erode(dilated_mask, kernel, iterations=5)
+# plt.figure()
+# plt.imshow(binary)
+# hist_to_csv(frame, mask)
 
 
