@@ -14,3 +14,6 @@ Działanie programu:
    Jeśli nie ma to tworzony jest nowy plik wykrytego samochodu zawierający dane o nim.
 6. Usunięcie samochodu z bazy wykrytych samochodów (gdy histogram z bazy nie pasuje do żadnego auta).
 x. Pliki są udostępniane pomiędzy RPi gdy tylko nowy plik pojawi się w folderze.
+
+
+sprawdzić chce czy mmi dziła
