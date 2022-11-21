@@ -28,9 +28,10 @@ def load_hists():
         print(filename)
         with open(f"Hists\\{filename}", newline='') as f:
             reader = pd.read_csv(f)
-            yield reader
+            yield reader.values
 
-def assign_object_id(target=0, histbase):
+
+def assign_object_id(target, histbase):
     # target - current processed histogram
     """
     Druga która przyjmuje histogramy z programu, historam obecnie przetwarzany,
@@ -44,21 +45,24 @@ def assign_object_id(target=0, histbase):
     """porównuje z bazą i mówi jaki to rodzaj, nadaje numer id, id w formacie kolor_numer,
      trzymać w pamięci te, które są na obrazie żeby nie nadawać im różnych numerów"""
 
-    target = pd.DataFrame(target)
+    best_norm = np.inf
+    object_id = np.NaN
 
-    for histogram in histbase:
-        label = histogram.iloc[0]
-        histogram = histogram
-        similarity = np.linalg.norm(histogram - target)
+    for i, histogram in enumerate(histbase):
+        norm = np.linalg.norm(histogram - target)
 
-        if similarity > 0.7: # spróbować dodać próg
-            return label
-            pass
-    pass
+        if norm < best_norm:
+            object_id = i
 
-hist_base = tuple(load_hists())
-print(hist_base)
-car = np.zeros((256, 3))
+    return object_id
+
+
+with open("Hists\\target.csv", newline='') as f:
+    car = pd.read_csv(f).values
+
+hbase = list(load_hists())
+assign_object_id(car, hbase)
+
 
 
 def Assign_object_id(car, hist_base):

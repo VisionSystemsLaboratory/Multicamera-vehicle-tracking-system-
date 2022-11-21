@@ -62,7 +62,7 @@ def main():
                 mask = cv.erode(dilated_mask, kernel, iterations=4)
 
                 # Klasyfikator do wykrywania obiektu pojawiającego się na obrazie
-                SAD_classificator = np.sum(mask) /(size[0]*size[1])
+                SAD_classificator = np.sum(mask) / (size[0]*size[1])
 
                 # Wyświetlanie wartości klasyfikatora aby dobrać odpowiedni próg:
                 # print(f'SAD value: {SAD_classificator}')
