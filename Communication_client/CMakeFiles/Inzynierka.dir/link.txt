@@ -1,1 +1,1 @@
-/usr/bin/c++     CMakeFiles/Inzynierka.dir/main.cpp.o CMakeFiles/Inzynierka.dir/sended_struct.cpp.o CMakeFiles/Inzynierka.dir/TXT_Sender.cpp.o  -o Inzynierka  -lsfml-network -lsfml-system -lsfml-window 
+/usr/bin/c++ CMakeFiles/Inzynierka.dir/main.cpp.o CMakeFiles/Inzynierka.dir/sended_struct.cpp.o CMakeFiles/Inzynierka.dir/TXT_Sender.cpp.o -o Inzynierka  -lsfml-network -lsfml-system -lsfml-window 

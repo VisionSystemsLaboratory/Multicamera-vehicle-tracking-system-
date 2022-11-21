@@ -19,42 +19,54 @@ def histogramRGB(image, mask):
         histogramRGB[:, channel_id] = histogram
         binEdgesRGB[:, channel_id] = binEdges
 
-    # fig, ax = plt.subplots()
-    # ax.set_xlim([0, 256])
-    # for i in range(3):
-    #     plt.plot(binEdgesRGB[0:-1, i], histogramRGB[:, i], colors[i])
-    # ax.set_title("Color Histogram")
-    # ax.set_xlabel("Color value")
-    # ax.set_ylabel("Pixel count")
     return histogramRGB
 
 
 # frame RGB, mask - gray scale (0, 255)
 def getHistogramsRGB(frame, mask):
-    retval, MaskCv = cv2.connectedComponents(mask)
-    # plt.figure(figsize=(13, 6))
-    # plt.imshow(MaskCv, cmap='plasma')
-    # plt.axis('off')
-    # plt.show()
-    histsRGB = []
-    for idx in range(1, retval):
-        maskIdx = np.where(MaskCv == idx, 1, 0)
-        histsRGB.append(histogramRGB(frame, maskIdx))
-    return histsRGB
+    nrOfComponents, maskId = cv2.connectedComponents(mask)
+    invalidIds = set().union([0], maskId[:, 0], maskId[:, -1], maskId[0, :], maskId[-1, :])
+    histsRGB = np.zeros((nrOfComponents, 256, 3))
+    for idx in range(nrOfComponents):
+        maskIdx = np.where(maskId == idx, 1, 0)
+        histsRGB[idx] = (histogramRGB(frame, maskIdx))
+    return np.delete(histsRGB, list(invalidIds), axis=0)
         
+
+def getRGBHistograms(frame, mask):
+    nrOfComponents, maskId = cv2.connectedComponents(mask)
+    invalidIds = set().union([0], maskId[:, 0], maskId[:, -1], maskId[0, :], maskId[-1, :])
+    
+    histogramsRGB = np.zeros((nrOfComponents, 256, 3))
+    
+    redLyr = 0
+    greenLyr = 1
+    blueLyr = 2
+    
+    for coord, objectIdx in np.ndenumerate(maskId):
+        i, j = coord
+
+        histogramsRGB[objectIdx, frame[i, j, redLyr], redLyr] += 1
+        histogramsRGB[objectIdx, frame[i, j, greenLyr], greenLyr] += 1
+        histogramsRGB[objectIdx, frame[i, j, blueLyr], blueLyr] += 1
+                
+    return np.delete(histogramsRGB, list(invalidIds), axis=0)
+    
     
         
 
-img = cv2.imread("shapes.png")
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+# img = cv2.imread("shapes.png")
+# img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-imgMask = cv2.imread("shapesMask.png")
-imgMask = cv2.cvtColor(imgMask, cv2.COLOR_BGR2RGB)
-imgMask = imgMask[:, :, 0]
+# imgMask = cv2.imread("shapesMask.png")
+# imgMask = cv2.cvtColor(imgMask, cv2.COLOR_BGR2RGB)
+# imgMask = imgMask[:, :, 0]
 
-fig, ax = plt.subplots(1, 2)
-ax[0].imshow(img)
-ax[1].imshow(imgMask, cmap='gray')
+# fig, ax = plt.subplots(1, 2)
+# ax[0].imshow(img)
+# ax[1].imshow(imgMask, cmap='gray')
 
-getHistogramsRGB(img, imgMask)
-
+# histA = getHistogramsRGB(img, imgMask)
+# histB = fastHistogramsRGB(img, imgMask)
+# # histC = fastHistogramsRGB2(img, imgMask)
+# print(np.all(histA == histB))

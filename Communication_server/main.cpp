@@ -168,7 +168,7 @@ int main()
             write_comunicate_sockte_status(status);
 
             if(status == sf::Socket::Status::Done) {
-                std::cout<<"TCP - Połączenie poprawne \n";
+                std::cout<<"TCP - Połączenie poprawne  \n";
                 break;
             }
         }
@@ -176,13 +176,17 @@ int main()
  
     tcp_client.setBlocking(false);
     
-    TXT_Sender txt_sender("../Sended_txt", "PD_", "txt", tcp_client);
-    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "txt", tcp_client);
+    TXT_Sender txt_sender("../Sended_txt", "PD_", "csv", tcp_client);
+    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "csv", tcp_client);
+    
+    
+    
     
     while(true){
         sf::Time time = clock.getElapsedTime();
 
-        if(time.asMilliseconds() > 1000){
+        //if(time.asMilliseconds() > 1000){
+        if(time.asMilliseconds() > 5){
             clock.restart();
 
             // Nadawanie
