@@ -2,48 +2,69 @@
 # -*- coding: utf-8 -*-
 import os
 import random
+import pandas as pd
 import csv
 import numpy as np
 
 def generate_random_histogram():
     data = ""
     for i in range(255):
-            random_num = random.randint(0, 255)
-            numtext = str(random_num)
-            data += numtext + ","
+        random_num = random.randint(0, 100)
+        numtext = str(random_num)
+        data += f"{numtext}, {numtext}, {numtext} \n"
 
     with open("Hists/db3.csv", 'w') as file:
         file.write(data)
 
+
 def load_hists():
-    """Jedna funkcja, która z csv wczytuje histogramy z bazy - zmienne globalne? """
-    # to jest jakby rodzaj pojazdu, jego bazowy kolor?
+    # histogram 3 kolumny R, G, B
+    # format pliku CSV
+
+    """Jedna funkcja, która z csv wczytuje histogramy z bazy - zmienne globalne?"""
 
     filenames = os.listdir("Hists")
-
     for filename in filenames:
+        print(filename)
         with open(f"Hists\\{filename}", newline='') as f:
-            reader = csv.reader(f)
-            histogram = list(reader)[0]
-            histogram = [int(x) for x in histogram[:-1]]
-            yield histogram
+            reader = pd.read_csv(f).values
+            yield reader[:, 1:4]
 
 
-# =============================================================================
-# hist1, hist2, hist3 = tuple(load_hists())
-# print(hist1)
-# print(hist2)
-# print(hist3)
-# =============================================================================
-
-
-def assign_object_id(target=0):
+def assign_object_id(target, histbase):
     # target - current processed histogram
-    """Druga która przyjmuje histogramy z programu, historam obecnie przetwarzany,
+    """
+    Druga która przyjmuje histogramy z programu, historam obecnie przetwarzany,
      nadany numer pojazdu - porównuje który histogram jest najbardziej podobny. - zwroci który to jest obiekt
 
     Identyfikuje, sprawdza czy jest w bazie jak nie ma to dodaje do bazy
-     i w pliku do wysłania bo jak już jest to nic nie rób.  """
+<<<<<<< HEAD
+     i w pliku do wysłania bo jak już jest to nic nie rób.
+     """
+
+    """porównuje z bazą i mówi jaki to rodzaj, nadaje numer id, id w formacie kolor_numer,
+     trzymać w pamięci te, które są na obrazie żeby nie nadawać im różnych numerów"""
+
+    best_norm = np.inf
+    object_id = np.NaN
+
+    for i, histogram in enumerate(histbase):
+        norm = np.linalg.norm(histogram - target)
+
+        if norm < best_norm:
+            object_id = i
+
+    return object_id
+
+histogramRGB = np.zeros((256, 3))
+hbase = list(load_hists())
+
+print(assign_object_id(histogramRGB, hbase))
+
+
+
+def Assign_object_id(car, hist_base):
+    # i w pliku do wysłania bo jak już jest to nic nie rób.
      
     # get random histogram for tests
     target = []
@@ -63,6 +84,7 @@ def assign_object_id(target=0):
         if sum_sol < best_hist_sum:
             best_hist_sum = sum_sol
             best_hist_Nr = n+1
+
     print(best_hist_Nr)
     
     # prepare txt to send
@@ -78,7 +100,7 @@ def assign_object_id(target=0):
 
     # Tu chyba nie do końca ogarniam o jakie bazy chodzi, jest jedna z rodzajem samochodu/kolorem. Ale OCB z tą drugą,
     # która identyfikuje obiekt jako taki. Jak ma być przetwarzana????
-    pass
+
     
 
 def clear_to_send():
@@ -86,5 +108,4 @@ def clear_to_send():
         with open("ToSend/tosend.txt", 'w') as file:
             file.close()
             
-assign_object_id()
 # clear_to_send()

@@ -37,7 +37,7 @@ def main():
             print("Can't receive frame (stream end?). Exiting ...")
         else:
             # Pobieranie ramki z tłem                                  
-            base =cv.resize(frame,size)                                         # Tło o zminionym rozmiarze
+            base =cv.resize(frame, size)                                         # Tło o zminionym rozmiarze
             gray_base = cv.cvtColor(base, cv.COLOR_BGR2GRAY)                    # Konwersja do barw odcieni szarości
 
 # --------------- Główna pętla programu ---------------------------------------
@@ -62,7 +62,7 @@ def main():
                 mask = cv.erode(dilated_mask, kernel, iterations=5)
 
                 # Klasyfikator do wykrywania obiektu pojawiającego się na obrazie
-                SAD_classificator = np.sum(mask) /(size[0]*size[1])
+                SAD_classificator = np.sum(mask) / (size[0]*size[1])
 
                 # Wyświetlanie wartości klasyfikatora aby dobrać odpowiedni próg:
                 # print(f'SAD value: {SAD_classificator}')
