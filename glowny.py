@@ -53,13 +53,13 @@ def main():
 
                 # Różnica obrazu obecnie przetwarzanego z tłem oraz binaryzacja
                 # diff = cv.subtract(gray_frame, gray_base)
-                threshold = 150
+                threshold = 110
                 binary = np.uint8(gray_frame < threshold) * 255
 
                 # Operacje morfologiczne - dylatacja i erozja
                 kernel = np.ones((5, 5), np.uint8)
-                dilated_mask = cv.dilate(binary, kernel, iterations=3)
-                mask = cv.erode(dilated_mask, kernel, iterations=4)
+                dilated_mask = cv.dilate(binary, kernel, iterations=5)
+                mask = cv.erode(dilated_mask, kernel, iterations=5)
 
                 # Klasyfikator do wykrywania obiektu pojawiającego się na obrazie
                 SAD_classificator = np.sum(mask) /(size[0]*size[1])
@@ -87,24 +87,12 @@ def main():
                     break
 
                 # Do odczytywania video z pliku, jeśli z kamery to zakomentować linijkę poniżej
-                time.sleep(0.03)
+                # time.sleep(0.03)
 
 # --------------- Koniec głównej pętli programu -------------------------------
 
         # Niszczenie okien do wyświetlania obrazu oraz jego pobierania
         cv.waitKey(0)
         cv.destroyAllWindows()
-
-
-    # Wyświetlanie zgromadzonych zdjęć do przetwarzania i wylicznia histogramu:
-    # plt.figure(figsize=(12,16))
-    # for i in range(len(lst_bound)):
-    #     plt.subplot(5, 2, i+1)
-    #     if i % 2 == 0:
-    #         plt.imshow(lst_bound[i])
-    #         plt.title('Ramka orginalna')
-    #     else:
-    #         plt.imshow(lst_mask[i-1], cmap='gray')
-    #         plt.title("Maska")
-    # plt.show()
+        
 main()
