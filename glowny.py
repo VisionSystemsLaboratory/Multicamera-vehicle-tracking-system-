@@ -69,7 +69,20 @@ def main():
 
                 # Decyzja o momencie wyliczania histogramów - czyli obiekt pojawił się na obrazie - decyduje o tym SAD
                 if SAD_classificator > 20:
-                    # TO DO: Wyliczenie histogramu, porównanie i klasyfikacja obiektu, komunikacja
+                    """
+                    # 1. Indeksowanie maski binarnej.
+                    maskIdx = ...
+                    # 2. Wyliczenie wszystkich histogramów oraz indeksów im odpowiadających (z indeksowania).
+                    histsRGB, histsRGBIdx = ...
+                    # 3. Sprawdzenie czy dany histogram znajduje się w bazie.
+                    for i, histRGB in enumerate(histsRGB):
+                      # 3.1. zwrócenie nazwy pliku z bazy (np. czerwony dla pliku czerwony.csv).
+                      # 3.2. sprawdzenie czy samochód istnieje w bazie znalezionych pojazdów (można zrobić grepa po nazwie "kolorze").
+                      # 3.3. jeśli nie ma go w bazie to go zapisać kolor.txt/csv w środku ID albo kolor_ID.txt.
+                      # 3.4. tu można powiązać numer ID z histsRGBIdx żeby można było wyświetlić ID w bounding box'ie.
+                           czyli np. appendować jakąś listę: tuple(histsRGBIdx[i], Id) albo od razu zrobić # 4 jak można
+                    # 4. wyświetlenie numerów ID w bounding boxach.
+                    """
                     iter += 1
                     if iter <= 10:
                         pass

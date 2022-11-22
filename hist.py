@@ -37,9 +37,6 @@ def getHistogramsRGB(frame, mask):
 def getRGBHistograms(frame, mask):
     nrOfComponents, maskId = cv2.connectedComponents(mask)
     temp = np.where(maskId == 0, 0, 255)
-    print(maskId)
-    plt.figure()
-    plt.imshow(temp, cmap="gray")
     invalidIds = set().union([0], maskId[:, 0], maskId[:, -1], maskId[0, :], maskId[-1, :])
     
     histogramsRGB = np.zeros((nrOfComponents, 256, 3))
@@ -63,6 +60,7 @@ def hist_to_csv(frame, mask):
     for i, histRGB in enumerate(histsRGB):
         pd.DataFrame(histRGB).to_csv(f"Hists/auto_{i}.csv")
     
+<<<<<<< HEAD
 # img = cv2.imread("shapes.png")
 # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 #
@@ -79,6 +77,8 @@ def hist_to_csv(frame, mask):
 # histC = fastHistogramsRGB2(img, imgMask)
 # print(np.all(histA == histB))
 # print(histA)
+=======
+>>>>>>> 42308ee0e1bf53e26da08f7cae48e096d2f0fda2
 # frame = cv2.imread("img.jpg")
 # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 # gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
@@ -91,5 +91,3 @@ def hist_to_csv(frame, mask):
 # plt.figure()
 # plt.imshow(binary)
 # hist_to_csv(frame, mask)
-
-
