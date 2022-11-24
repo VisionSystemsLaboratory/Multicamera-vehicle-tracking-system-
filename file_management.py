@@ -109,5 +109,40 @@ def clear_to_send():
     if os.path.exists("ToSend/tosend.txt"):
         with open("ToSend/tosend.txt", 'w') as file:
             file.close()
-            
+
+
+def updateReceivedBase(base):
+    rNr = len(base) + 1
+    filePath = "Received/car" + str(rNr) + ".txt"
+    if os.path.isfile(filePath):
+        with open(filePath) as f:
+            data = [line.strip() for line in f.readlines()]
+        base.append((data[0], int(data[1])))
+
+def updateSendedBaseAndGetCarIds(detectedColors, sBase, rBase, idFactor=100):
+    carIds = []
+    checkRBase = len(rBase) > 0
+    checksBase = len(sBase) > 0
+    if checkRBase:
+        rColors, rColorsId = list(zip(*rBase))
+    if checksBase:
+        sColors, sColorsId = list(zip(*sBase))
+
+    for detectedColor in detectedColors:
+        if checkRBase and detectedColor in rColors:
+            it = rColors.index(detectedColor)
+            carIds.append(rColorsId[it])
+        elif checksBase and detectedColor in sColors:
+            it = sColors.index(detectedColor)
+            carIds.append(sColorsId[it])
+        else:
+            newId = len(sBase) + 1 + idFactor
+            string = detectedColors + "\n" + str(newId)
+            text_file = open(f"Sended/car{newId}.txt", "w")
+            text_file.write(string)
+            text_file.close()
+            sBase.append((detectedColor, newId))
+            carIds.append(newId)
+    return carIds
+
 # clear_to_send()

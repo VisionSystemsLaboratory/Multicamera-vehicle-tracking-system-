@@ -1,8 +1,10 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
-import time 
+import time
 import copy as cp
+from hist import getHistogramsRGB, getRGBHistograms
+from file_management import assign_object_id, load_hists, updateReceivedBase, updateSendedBaseAndGetCarIds
 
 def draw_countur(mask, frame):
     contours, _ = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) # znajdowanie konturów
@@ -36,6 +38,9 @@ def main():
         if not ret:                                                             # Sprawdzania czy odczytano ramkę obrazu poprawnie, jeżeli tak to ret == True
             print("Can't receive frame (stream end?). Exiting ...")
         else:
+            histBase = load_hists()                                             # Baza samochodow defaultowa
+            sendedBase = []                                                     # baza wykrytych pojazdów [(kolor, id), (...)]
+            receivedBase = []                                                   # baza pojazdów wykrytych przez drugą kamerę [(j.w)]
             # Pobieranie ramki z tłem                                  
             base =cv.resize(frame, size)                                         # Tło o zminionym rozmiarze
             gray_base = cv.cvtColor(base, cv.COLOR_BGR2GRAY)                    # Konwersja do barw odcieni szarości
@@ -77,12 +82,23 @@ def main():
                     # 3. Sprawdzenie czy dany histogram znajduje się w bazie.
                     for i, histRGB in enumerate(histsRGB):
                       # 3.1. zwrócenie nazwy pliku z bazy (np. czerwony dla pliku czerwony.csv).
-                      # 3.2. sprawdzenie czy samochód istnieje w bazie znalezionych pojazdów (można zrobić grepa po nazwie "kolorze").
+                      # 3.2. sprawdzenie czy samochód istnieje w bazie znalezionych pojazdów.
                       # 3.3. jeśli nie ma go w bazie to go zapisać kolor.txt/csv w środku ID albo kolor_ID.txt.
                       # 3.4. tu można powiązać numer ID z histsRGBIdx żeby można było wyświetlić ID w bounding box'ie.
                            czyli np. appendować jakąś listę: tuple(histsRGBIdx[i], Id) albo od razu zrobić # 4 jak można
                     # 4. wyświetlenie numerów ID w bounding boxach.
                     """
+                    updateReceivedBase(receivedBase)
+                    nrOfComponents, maskId = cv.connectedComponents(mask)
+                    histogramsRGB, histogramsIdx = getHistogramsRGB(frame, nrOfComponents, maskId)
+                    colorsOfDetectedCars = assign_object_id(histogramsRGB, histBase)
+                    carIdx = updateSendedBaseAndGetCarIds(colorsOfDetectedCars, sendedBase, receivedBase)
+                    #TODO przypisanie id do ramek (
+                    #   histogramsIdx - ids z maski z indeksowania)
+                    #   carIdx - faktyczne indeksy
+                    #   wyszukac w maskId pokolei histogramsIdx i odpowiednio wypisac na obrazie carIdx
+                    #   albo mozna liczyc srodek ciezkosci albo pierwszy napotkany
+                    
                     iter += 1
                     if iter <= 10:
                         pass
