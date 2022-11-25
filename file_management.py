@@ -137,7 +137,7 @@ def updateSendedBaseAndGetCarIds(detectedColors, sBase, rBase, idFactor=100):
             carIds.append(sColorsId[it])
         else:
             newId = len(sBase) + 1
-            string = detectedColors + "\n" + str(newId)
+            string = detectedColor + "\n" + str(newId)
             text_file = open(f"Sended_txt/car{newId}.txt", "w")
             text_file.write(string)
             text_file.close()
