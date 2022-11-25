@@ -28,12 +28,9 @@ def main():
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
-    else:
-        iter = 0
-        lst_bound = []                                                          # Lista przechowująca ramki obrazu do wyznaczania histogramu
-        lst_mask = []                                                           # Liczta zawierające maskę binarną ramki do wyznaczenia histogramu
-        size = (1200, 720)                                                      # Wymiar ramki przetwarzanego obrazu
-
+    else:                                                       
+        size = (720, 360)                                                      # Wymiar ramki przetwarzanego obrazu
+        size_for_hist = (120, 100)          
         ret, frame = cap.read()                                                 # Pobieranie ramki obrazu
         if not ret:                                                             # Sprawdzania czy odczytano ramkę obrazu poprawnie, jeżeli tak to ret == True
             print("Can't receive frame (stream end?). Exiting ...")
@@ -44,6 +41,9 @@ def main():
             # Pobieranie ramki z tłem                                  
             base =cv.resize(frame, size)                                         # Tło o zminionym rozmiarze
             gray_base = cv.cvtColor(base, cv.COLOR_BGR2GRAY)                    # Konwersja do barw odcieni szarości
+
+            hist_base = cv.resize(cp.copy(base), size_for_hist)
+            hist_base_gray = cv.cvtColor(hist_frame, cv.COLOR_BGR2GRAY)
 
 # --------------- Główna pętla programu ---------------------------------------
             while True:
@@ -56,15 +56,23 @@ def main():
                 frame =cv.resize(frame, size)                                   
                 gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
+                hist_frame = cv.resize(cp.copy(frame), size_for_hist)
+                hist_gray = cv.cvtColor(hist_frame, cv.COLOR_BGR2GRAY)
+
                 # Różnica obrazu obecnie przetwarzanego z tłem oraz binaryzacja
                 # diff = cv.subtract(gray_frame, gray_base)
                 threshold = 110
                 binary = np.uint8(gray_frame < threshold) * 255
+                hist_binary = np.uint8(hist_gray < threshold) * 255
 
                 # Operacje morfologiczne - dylatacja i erozja
                 kernel = np.ones((5, 5), np.uint8)
+
                 dilated_mask = cv.dilate(binary, kernel, iterations=5)
                 mask = cv.erode(dilated_mask, kernel, iterations=5)
+
+                hist_dilated_mask = cv.dilate(hist_binary, kernel, iterations=5)
+                hist_mask = cv.erode(hist_dilated_mask, kernel, iterations=5)
 
                 # Klasyfikator do wykrywania obiektu pojawiającego się na obrazie
                 SAD_classificator = np.sum(mask) / (size[0]*size[1])
@@ -89,8 +97,8 @@ def main():
                     # 4. wyświetlenie numerów ID w bounding boxach.
                     """
                     updateReceivedBase(receivedBase)
-                    nrOfComponents, maskId = cv.connectedComponents(mask)
-                    histogramsRGB, histogramsIdx = getHistogramsRGB(frame, nrOfComponents, maskId)
+                    nrOfComponents, maskId = cv.connectedComponents(hist_mask)
+                    histogramsRGB, histogramsIdx = getHistogramsRGB(hist_frame, nrOfComponents, maskId)
                     colorsOfDetectedCars = assign_object_id(histogramsRGB, histBase)
                     carIdx = updateSendedBaseAndGetCarIds(colorsOfDetectedCars, sendedBase, receivedBase)
                     #TODO przypisanie id do ramek (
@@ -98,25 +106,19 @@ def main():
                     #   carIdx - faktyczne indeksy
                     #   wyszukac w maskId pokolei histogramsIdx i odpowiednio wypisac na obrazie carIdx
                     #   albo mozna liczyc srodek ciezkosci albo pierwszy napotkany
-                    
-                    iter += 1
-                    if iter <= 10:
-                        pass
-                        # lst_bound.append(cp.copy(frame))
-                        # lst_mask.append(cp.copy(mask))
 
                 # Próbne wyświetlanie obrazu:
                 # cv.imshow('BINARY', mask)
 
                 # Rysowanie boundingboxów na obrazie:
-                # draw_countur(mask, frame)
+                draw_countur(mask, frame)
 
                 # Zakończenie działania programu:
                 if cv.waitKey(1) == ord('q'):
                     break
 
                 # Do odczytywania video z pliku, jeśli z kamery to zakomentować linijkę poniżej
-                # time.sleep(0.03)
+                time.sleep(0.03)
 
 # --------------- Koniec głównej pętli programu -------------------------------
 
@@ -124,16 +126,4 @@ def main():
         cv.waitKey(0)
         cv.destroyAllWindows()
 
-
-    # Wyświetlanie zgromadzonych zdjęć do przetwarzania i wylicznia histogramu:
-    # plt.figure(figsize=(12,16))
-    # for i in range(len(lst_bound)):
-    #     plt.subplot(5, 2, i+1)
-    #     if i % 2 == 0:
-    #         plt.imshow(lst_bound[i])
-    #         plt.title('Ramka orginalna')
-    #     else:
-    #         plt.imshow(lst_mask[i-1], cmap='gray')
-    #         plt.title("Maska")
-    # plt.show()
 main()
