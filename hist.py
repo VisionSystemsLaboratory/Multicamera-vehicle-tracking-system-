@@ -1,14 +1,16 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+import pandas as pd
+
 
 def histogramRGB(image, mask):
     maskRGB = np.stack((mask, mask, mask), axis=2)
     objImg = image * maskRGB
     histogramRGB = np.zeros((256, 3))
     binEdgesRGB = np.zeros((257, 3))
-    
-    background = np.count_nonzero(mask==0)
+
+    background = np.count_nonzero(mask == 0)
     colors = ("red", "green", "blue")
 
     for channel_id, color in enumerate(colors):
@@ -19,42 +21,57 @@ def histogramRGB(image, mask):
         histogramRGB[:, channel_id] = histogram
         binEdgesRGB[:, channel_id] = binEdges
 
-    # fig, ax = plt.subplots()
-    # ax.set_xlim([0, 256])
-    # for i in range(3):
-    #     plt.plot(binEdgesRGB[0:-1, i], histogramRGB[:, i], colors[i])
-    # ax.set_title("Color Histogram")
-    # ax.set_xlabel("Color value")
-    # ax.set_ylabel("Pixel count")
     return histogramRGB
 
 
-# frame RGB, mask - gray scale (0, 255)
-def getHistogramsRGB(frame, mask):
-    retval, MaskCv = cv2.connectedComponents(mask)
-    # plt.figure(figsize=(13, 6))
-    # plt.imshow(MaskCv, cmap='plasma')
-    # plt.axis('off')
-    # plt.show()
-    histsRGB = []
-    for idx in range(1, retval):
-        maskIdx = np.where(MaskCv == idx, 1, 0)
-        histsRGB.append(histogramRGB(frame, maskIdx))
-    return histsRGB
-        
-    
-        
+def getHistogramsRGB(frame, nrOfComponents, maskId):
+    invalidIds = set().union([0], maskId[:, 0],
+                             maskId[:, -1], maskId[0, :], maskId[-1, :])
 
-img = cv2.imread("shapes.png")
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    histsRGB = np.zeros((nrOfComponents, 256, 3))
+    histsIdx = np.arange(nrOfComponents)
+    for idx in range(nrOfComponents):
+        maskIdx = np.where(maskId == idx, 1, 0)
+        histsRGB[idx] = (histogramRGB(frame, maskIdx))
+    return np.delete(histsRGB, list(invalidIds), axis=0), np.delete(histsIdx, list(invalidIds), axis=0)
 
-imgMask = cv2.imread("shapesMask.png")
-imgMask = cv2.cvtColor(imgMask, cv2.COLOR_BGR2RGB)
-imgMask = imgMask[:, :, 0]
 
-fig, ax = plt.subplots(1, 2)
-ax[0].imshow(img)
-ax[1].imshow(imgMask, cmap='gray')
+def getRGBHistograms(frame, nrOfComponents, maskId):
+    invalidIds = set().union([0], maskId[:, 0],
+                             maskId[:, -1], maskId[0, :], maskId[-1, :])
 
-getHistogramsRGB(img, imgMask)
+    histogramsRGB = np.zeros((nrOfComponents, 256, 3))
+    histsIdx = np.arange(nrOfComponents)
 
+    redLyr = 0
+    greenLyr = 1
+    blueLyr = 2
+
+    for coord, objectIdx in np.ndenumerate(maskId):
+        i, j = coord
+
+        histogramsRGB[objectIdx, frame[i, j, redLyr], redLyr] += 1
+        histogramsRGB[objectIdx, frame[i, j, greenLyr], greenLyr] += 1
+        histogramsRGB[objectIdx, frame[i, j, blueLyr], blueLyr] += 1
+
+    return np.delete(histogramsRGB, list(invalidIds), axis=0), np.delete(histsIdx, list(invalidIds), axis=0)
+
+
+def hist_to_csv(frame, mask):
+    histsRGB, _ = getRGBHistograms(frame, mask)
+    for i, histRGB in enumerate(histsRGB):
+        pd.DataFrame(histRGB).to_csv(f"Hists/auto_{i}.csv")
+
+
+# frame = cv2.imread("img.jpg")
+# frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+# gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+
+# threshold = 110
+# binary = np.uint8(gray_frame < threshold) * 255
+# kernel = np.ones((5, 5), np.uint8)
+# dilated_mask = cv2.dilate(binary, kernel, iterations=5)
+# mask = cv2.erode(dilated_mask, kernel, iterations=5)
+# plt.figure()
+# plt.imshow(binary)
+# hist_to_csv(frame, mask)
