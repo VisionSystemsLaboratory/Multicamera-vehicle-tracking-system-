@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
+
 def generate_random_histogram():
     data = ""
     for i in range(255):
@@ -22,7 +23,6 @@ def generate_random_histogram():
 def load_hists():
     # histogram 3 kolumny R, G, B
     # format pliku CSV
-
     """Jedna funkcja, która z csv wczytuje histogramy z bazy - zmienne globalne?"""
 
     filenames = os.listdir("Hists")
@@ -44,11 +44,12 @@ def assign_object_id(targets, histbase):
     """
     # target - current processed histogram
     # todo :
-    color_description = {0: "Czerwony", 1: "Zielony", 2: "Niebieski", np.NaN: "Niezidentyfikowany"}
+    color_description = {0: "Czerwony", 1: "Zielony",
+                         2: "Niebieski", np.NaN: "Niezidentyfikowany"}
     best_norm = np.inf
     car_id = np.NaN
     car_ids = []
-    threshold = 70 # miara dopasowania
+    threshold = 40  # miara dopasowania
 
     for target in targets:
         for idx, histogram in enumerate(histbase):
@@ -65,15 +66,16 @@ def assign_object_id(targets, histbase):
 
     return car_ids
 
+
 def Assign_object_id(car, hist_base):
     # i w pliku do wysłania bo jak już jest to nic nie rób.
-     
+
     # get random histogram for tests
     target = []
     for i in range(255):
-            random_num = random.randint(0, 255)
-            target.append(random_num)
-            
+        random_num = random.randint(0, 255)
+        target.append(random_num)
+
     # calculate which hist is most similar
     hist1, hist2, hist3 = tuple(load_hists())
     hist_package = [hist1, hist2, hist3]
@@ -88,7 +90,7 @@ def Assign_object_id(car, hist_base):
             best_hist_Nr = n+1
 
     print(best_hist_Nr)
-    
+
     # prepare txt to send
     if not os.path.exists("ToSend/tosend.txt"):
         open("ToSend/tosend.txt", 'w').write('')
@@ -103,7 +105,6 @@ def Assign_object_id(car, hist_base):
     # Tu chyba nie do końca ogarniam o jakie bazy chodzi, jest jedna z rodzajem samochodu/kolorem. Ale OCB z tą drugą,
     # która identyfikuje obiekt jako taki. Jak ma być przetwarzana????
 
-    
 
 def clear_to_send():
     if os.path.exists("ToSend/tosend.txt"):
@@ -118,6 +119,7 @@ def updateReceivedBase(base):
         with open(filePath) as f:
             data = [line.strip() for line in f.readlines()]
         base.append((data[0], int(data[1])))
+
 
 def updateSendedBaseAndGetCarIds(detectedColors, sBase, rBase, idFactor=100):
     carIds = []

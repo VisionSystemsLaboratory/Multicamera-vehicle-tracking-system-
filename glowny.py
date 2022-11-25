@@ -3,28 +3,39 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import copy as cp
+import pandas as pd
 from hist import getHistogramsRGB, getRGBHistograms
 from file_management import assign_object_id, load_hists, updateReceivedBase, updateSendedBaseAndGetCarIds
 
-def draw_countur(mask, frame):
-    contours, _ = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) # znajdowanie konturów
 
-    contours_poly = [None]*len(contours)                  # Lista do przechowywania konturów wygładzonych
-    boundRect = [None]*len(contours)                      # Lista do przechowywania bounding boxów
+def draw_countur(mask, frame):
+    contours, _ = cv.findContours(
+        mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)  # znajdowanie konturów
+
+    # Lista do przechowywania konturów wygładzonych
+    contours_poly = [None]*len(contours)
+    # Lista do przechowywania bounding boxów
+    boundRect = [None]*len(contours)
     for i, c in enumerate(contours):
-        contours_poly[i] = cv.approxPolyDP(c, 3, True)    # Aproksymacja wielomianowa w celu wygładzenia konturów
-        boundRect[i] = cv.boundingRect(contours_poly[i])  # Tworzenie Bounding boxów
-    
-    for i in range(len(contours)):                        # Dodanie do Ramki obrazu bounding boxów
-        color = (0, 0 ,255)
-        cv.rectangle(frame, (int(boundRect[i][0]), int(boundRect[i][1])), \
-          (int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])), color, 2)
-          
-    cv.imshow('Sledzone obiekty', frame)                  # Wyświetlanie na ekran przetworzonego obraz
+        # Aproksymacja wielomianowa w celu wygładzenia konturów
+        contours_poly[i] = cv.approxPolyDP(c, 3, True)
+        boundRect[i] = cv.boundingRect(
+            contours_poly[i])  # Tworzenie Bounding boxów
+
+    # Dodanie do Ramki obrazu bounding boxów
+    for i in range(len(contours)):
+        color = (0, 0, 255)
+        cv.rectangle(frame, (int(boundRect[i][0]), int(boundRect[i][1])),
+                     (int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])), color, 2)
+
+    # Wyświetlanie na ekran przetworzonego obraz
+    cv.imshow('Sledzone obiekty', frame)
+
 
 def main():
-    
-    cap = cv.VideoCapture(0)                                        # Pobieranie obrazu z pliku bądź kamery
+
+    # Pobieranie obrazu z pliku bądź kamery
+    cap = cv.VideoCapture("video_samples/pracownia.avi")
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
@@ -38,22 +49,17 @@ def main():
             histBase = load_hists()                                             # Baza samochodow defaultowa
             sendedBase = []                                                     # baza wykrytych pojazdów [(kolor, id), (...)]
             receivedBase = []                                                   # baza pojazdów wykrytych przez drugą kamerę [(j.w)]
-            # Pobieranie ramki z tłem                                  
-            base =cv.resize(frame, size)                                         # Tło o zminionym rozmiarze
-            gray_base = cv.cvtColor(base, cv.COLOR_BGR2GRAY)                    # Konwersja do barw odcieni szarości
-
-            hist_base = cv.resize(cp.copy(base), size_for_hist)
-            hist_base_gray = cv.cvtColor(hist_frame, cv.COLOR_BGR2GRAY)
 
 # --------------- Główna pętla programu ---------------------------------------
             while True:
                 # Pobieranie obecnie przetwarzanej ramki obrazu
                 ret, frame = cap.read()
-                if not ret:                                                     # Sprawdzania czy odczytano ramkę obrazu poprawnie, jeżeli tak to ret == True
+                # Sprawdzania czy odczytano ramkę obrazu poprawnie, jeżeli tak to ret == True
+                if not ret:
                     print("Can't receive frame (stream end?). Exiting ...")
                     break
-                # Zmiana rozmiaru ramki obrazu oraz konwersja to barw w skali szarości         
-                frame =cv.resize(frame, size)                                   
+                # Zmiana rozmiaru ramki obrazu oraz konwersja to barw w skali szarości
+                frame = cv.resize(frame, size)
                 gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
                 hist_frame = cv.resize(cp.copy(frame), size_for_hist)
@@ -61,7 +67,7 @@ def main():
 
                 # Różnica obrazu obecnie przetwarzanego z tłem oraz binaryzacja
                 # diff = cv.subtract(gray_frame, gray_base)
-                threshold = 110
+                threshold = 100
                 binary = np.uint8(gray_frame < threshold) * 255
                 hist_binary = np.uint8(hist_gray < threshold) * 255
 
@@ -81,7 +87,7 @@ def main():
                 # print(f'SAD value: {SAD_classificator}')
 
                 # Decyzja o momencie wyliczania histogramów - czyli obiekt pojawił się na obrazie - decyduje o tym SAD
-                if SAD_classificator > 20:
+                if SAD_classificator > 10:
                     """
                     # 1. Indeksowanie maski binarnej.
                     maskIdx = ...
@@ -96,12 +102,15 @@ def main():
                            czyli np. appendować jakąś listę: tuple(histsRGBIdx[i], Id) albo od razu zrobić # 4 jak można
                     # 4. wyświetlenie numerów ID w bounding boxach.
                     """
+
                     updateReceivedBase(receivedBase)
                     nrOfComponents, maskId = cv.connectedComponents(hist_mask)
                     histogramsRGB, histogramsIdx = getHistogramsRGB(hist_frame, nrOfComponents, maskId)
+                    print(histogramsRGB.shape)
                     colorsOfDetectedCars = assign_object_id(histogramsRGB, histBase)
+                    print(colorsOfDetectedCars)
                     carIdx = updateSendedBaseAndGetCarIds(colorsOfDetectedCars, sendedBase, receivedBase)
-                    #TODO przypisanie id do ramek (
+                    # TODO przypisanie id do ramek (
                     #   histogramsIdx - ids z maski z indeksowania)
                     #   carIdx - faktyczne indeksy
                     #   wyszukac w maskId pokolei histogramsIdx i odpowiednio wypisac na obrazie carIdx
