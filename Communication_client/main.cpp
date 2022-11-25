@@ -110,8 +110,8 @@ int main() {
     }
     tcp_socket.setBlocking(false);
 
-    TXT_Reciver txt_reciver("../Recived_txt", "PD_", "csv", tcp_socket);
-    TXT_Sender txt_sender("../Sended_txt", "PD_", "csv", tcp_socket);
+    TXT_Reciver txt_reciver("../Recived_txt", "car", "txt", tcp_socket);
+    TXT_Sender txt_sender("../Sended_txt", "car", "txt", tcp_socket);
 
     while(true){
         sf::Time time = clock.getElapsedTime();

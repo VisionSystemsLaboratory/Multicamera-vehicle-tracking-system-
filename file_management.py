@@ -113,7 +113,7 @@ def clear_to_send():
 
 def updateReceivedBase(base):
     rNr = len(base) + 1
-    filePath = "Received/car" + str(rNr) + ".txt"
+    filePath = "Received_txt/car" + str(rNr) + ".txt"
     if os.path.isfile(filePath):
         with open(filePath) as f:
             data = [line.strip() for line in f.readlines()]
@@ -136,9 +136,9 @@ def updateSendedBaseAndGetCarIds(detectedColors, sBase, rBase, idFactor=100):
             it = sColors.index(detectedColor)
             carIds.append(sColorsId[it])
         else:
-            newId = len(sBase) + 1 + idFactor
+            newId = len(sBase) + 1
             string = detectedColors + "\n" + str(newId)
-            text_file = open(f"Sended/car{newId}.txt", "w")
+            text_file = open(f"Sended_txt/car{newId}.txt", "w")
             text_file.write(string)
             text_file.close()
             sBase.append((detectedColor, newId))
