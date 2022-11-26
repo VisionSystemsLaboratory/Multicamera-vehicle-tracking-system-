@@ -8,7 +8,7 @@ from hist import getHistogramsRGB, getRGBHistograms
 from file_management import assign_object_id, load_hists, updateReceivedBase, updateSendedBaseAndGetCarIds
 
 
-def draw_countur(mask, frame):
+def draw_countur(mask, frame, carIdxTemp):
     contours, _ = cv.findContours(
         mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)  # znajdowanie konturów
 
@@ -27,7 +27,12 @@ def draw_countur(mask, frame):
         color = (0, 0, 255)
         cv.rectangle(frame, (int(boundRect[i][0]), int(boundRect[i][1])),
                      (int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])), color, 2)
-
+        x1 = int(boundRect[i][0])
+        y1 = int(boundRect[i][1])
+        print(carIdxTemp)
+        if carIdxTemp:
+            frame = cv.putText(frame, str(carIdxTemp[i]), (x1,y1), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 5, cv.LINE_AA)
+    
     # Wyświetlanie na ekran przetworzonego obraz
     cv.imshow('Sledzone obiekty', frame)
 
@@ -85,7 +90,7 @@ def main():
 
                 # Wyświetlanie wartości klasyfikatora aby dobrać odpowiedni próg:
                 # print(f'SAD value: {SAD_classificator}')
-
+                carIdx = []
                 # Decyzja o momencie wyliczania histogramów - czyli obiekt pojawił się na obrazie - decyduje o tym SAD
                 if SAD_classificator > 10:
                     """
@@ -106,10 +111,11 @@ def main():
                     updateReceivedBase(receivedBase)
                     nrOfComponents, maskId = cv.connectedComponents(hist_mask)
                     histogramsRGB, histogramsIdx = getHistogramsRGB(hist_frame, nrOfComponents, maskId)
-                    print(histogramsRGB.shape)
+                    # print(histogramsRGB.shape)
                     colorsOfDetectedCars = assign_object_id(histogramsRGB, histBase)
-                    print(colorsOfDetectedCars)
+                    # print(colorsOfDetectedCars)
                     carIdx = updateSendedBaseAndGetCarIds(colorsOfDetectedCars, sendedBase, receivedBase)
+                    # print(carIdx)
                     # TODO przypisanie id do ramek (
                     #   histogramsIdx - ids z maski z indeksowania)
                     #   carIdx - faktyczne indeksy
@@ -120,7 +126,7 @@ def main():
                 # cv.imshow('BINARY', mask)
 
                 # Rysowanie boundingboxów na obrazie:
-                draw_countur(mask, frame)
+                draw_countur(mask, frame, carIdx)
 
                 # Zakończenie działania programu:
                 if cv.waitKey(1) == ord('q'):
