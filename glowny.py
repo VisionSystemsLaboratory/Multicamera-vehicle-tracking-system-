@@ -4,7 +4,7 @@ import numpy as np
 import time
 import copy as cp
 import pandas as pd
-from hist import getHistogramsRGB, getRGBHistograms
+from hist import getHistogramsRGB, getRGBHistograms, hist_to_csv
 from file_management import assign_object_id, load_hists, updateReceivedBase, updateSendedBaseAndGetCarIds
 
 
@@ -51,10 +51,9 @@ def main():
         if not ret:                                                             # Sprawdzania czy odczytano ramkę obrazu poprawnie, jeżeli tak to ret == True
             print("Can't receive frame (stream end?). Exiting ...")
         else:
-            histBase = load_hists()                                             # Baza samochodow defaultowa
+            histBase = list(load_hists())                                       # Baza samochodow defaultowa
             sendedBase = []                                                     # baza wykrytych pojazdów [(kolor, id), (...)]
             receivedBase = []                                                   # baza pojazdów wykrytych przez drugą kamerę [(j.w)]
-
 # --------------- Główna pętla programu ---------------------------------------
             while True:
                 # Pobieranie obecnie przetwarzanej ramki obrazu
@@ -92,7 +91,7 @@ def main():
                 # print(f'SAD value: {SAD_classificator}')
                 carIdx = []
                 # Decyzja o momencie wyliczania histogramów - czyli obiekt pojawił się na obrazie - decyduje o tym SAD
-                if SAD_classificator > 10:
+                if SAD_classificator > 5:
                     """
                     # 1. Indeksowanie maski binarnej.
                     maskIdx = ...
@@ -111,8 +110,10 @@ def main():
                     updateReceivedBase(receivedBase)
                     nrOfComponents, maskId = cv.connectedComponents(hist_mask)
                     histogramsRGB, histogramsIdx = getHistogramsRGB(hist_frame, nrOfComponents, maskId)
+
                     # print(histogramsRGB.shape)
                     colorsOfDetectedCars = assign_object_id(histogramsRGB, histBase)
+                    print(colorsOfDetectedCars)
                     # print(colorsOfDetectedCars)
                     carIdx = updateSendedBaseAndGetCarIds(colorsOfDetectedCars, sendedBase, receivedBase)
                     # print(carIdx)
@@ -126,14 +127,14 @@ def main():
                 # cv.imshow('BINARY', mask)
 
                 # Rysowanie boundingboxów na obrazie:
-                draw_countur(mask, frame, carIdx)
+                # draw_countur(mask, frame, carIdx)
 
                 # Zakończenie działania programu:
                 if cv.waitKey(1) == ord('q'):
                     break
 
                 # Do odczytywania video z pliku, jeśli z kamery to zakomentować linijkę poniżej
-                time.sleep(0.03)
+                time.sleep(0.05)
 
 # --------------- Koniec głównej pętli programu -------------------------------
 

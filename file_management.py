@@ -44,12 +44,12 @@ def assign_object_id(targets, histbase):
     """
     # target - current processed histogram
     # todo :
-    color_description = {0: "Czerwony", 1: "Zielony",
-                         2: "Niebieski", np.NaN: "Niezidentyfikowany"}
+    color_description = {0: "Czerwony", 1: "Niebieski",
+                         2: "Zielony", np.NaN: "Niezidentyfikowany"}
     best_norm = np.inf
     car_id = np.NaN
     car_ids = []
-    threshold = 40  # miara dopasowania
+    threshold = np.inf  # miara dopasowania
 
     for target in targets:
         for idx, histogram in enumerate(histbase):
@@ -62,7 +62,9 @@ def assign_object_id(targets, histbase):
                 else:
                     car_id = np.NaN
 
+        print(f"Best norm is: {best_norm}")
         car_ids.append(color_description[car_id])
+        best_norm = np.inf
 
     return car_ids
 
@@ -147,4 +149,20 @@ def updateSendedBaseAndGetCarIds(detectedColors, sBase, rBase, idFactor=100):
             carIds.append(newId)
     return carIds
 
-# clear_to_send()
+#   DELETE IT
+def load_hist_to_mem(folder):
+    filenames = os.listdir(folder)
+    filenames.remove("kasujto")
+    for filename in filenames:
+        with open(f"{folder}\\{filename}", newline='') as f:
+            reader = pd.read_csv(f).values
+            yield reader[:, 1:4]
+
+
+def print_hist(histogram):
+
+    plt.plot(histogram[:, 0], "r")
+    plt.plot(histogram[:, 1], "g")
+    plt.plot(histogram[:, 2], "b")
+
+    
