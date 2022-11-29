@@ -8,7 +8,7 @@ from hist import getHistogramsRGB, getRGBHistograms, hist_to_csv
 from file_management import assign_object_id, load_hists, updateReceivedBase, updateSendedBaseAndGetCarIds
 
 
-def draw_countur(mask, frame, carIdxTemp):
+def draw_countur(mask, frame):
     contours, _ = cv.findContours(
         mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)  # znajdowanie konturów
 
@@ -27,11 +27,6 @@ def draw_countur(mask, frame, carIdxTemp):
         color = (0, 0, 255)
         cv.rectangle(frame, (int(boundRect[i][0]), int(boundRect[i][1])),
                      (int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])), color, 2)
-        x1 = int(boundRect[i][0])
-        y1 = int(boundRect[i][1])
-        print(carIdxTemp)
-        if carIdxTemp:
-            frame = cv.putText(frame, str(carIdxTemp[i]), (x1,y1), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 5, cv.LINE_AA)
     
     # Wyświetlanie na ekran przetworzonego obraz
     cv.imshow('Sledzone obiekty', frame)
@@ -110,24 +105,36 @@ def main():
                     updateReceivedBase(receivedBase)
                     nrOfComponents, maskId = cv.connectedComponents(hist_mask)
                     histogramsRGB, histogramsIdx = getHistogramsRGB(hist_frame, nrOfComponents, maskId)
-
-                    # print(histogramsRGB.shape)
+                    
+                    # print(type(maskId))
+                    # print(histogramsRGB)
                     colorsOfDetectedCars = assign_object_id(histogramsRGB, histBase)
                     print(colorsOfDetectedCars)
-                    # print(colorsOfDetectedCars)
                     carIdx = updateSendedBaseAndGetCarIds(colorsOfDetectedCars, sendedBase, receivedBase)
-                    # print(carIdx)
-                    # TODO przypisanie id do ramek (
-                    #   histogramsIdx - ids z maski z indeksowania)
-                    #   carIdx - faktyczne indeksy
-                    #   wyszukac w maskId pokolei histogramsIdx i odpowiednio wypisac na obrazie carIdx
-                    #   albo mozna liczyc srodek ciezkosci albo pierwszy napotkany
-
+                    print(carIdx)
+                    
+                    # przypisanie id do ramek
+                    if carIdx:
+                        for i in range(1, len(carIdx)+1):
+                            f = False
+                            for y in range(len(maskId)):
+                                for x in range(len(maskId[y])):
+                                    if maskId[y,x] == i:
+                                        # x1 = np.where(maskId==i)
+                                        frame = cv.putText(frame, str(carIdx[i-1])+" "+colorsOfDetectedCars[i-1], (x*6-60,y*4-20), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 5, cv.LINE_AA)
+                                        f = True
+                                    if f:
+                                        break
+                                if f:
+                                    break
+                                
                 # Próbne wyświetlanie obrazu:
                 # cv.imshow('BINARY', mask)
-
+                
+                # Wyświetlanie na ekran przetworzonego obraz
+                # cv.imshow('Sledzone obiekty', frame)
                 # Rysowanie boundingboxów na obrazie:
-                # draw_countur(mask, frame, carIdx)
+                draw_countur(mask, frame)
 
                 # Zakończenie działania programu:
                 if cv.waitKey(1) == ord('q'):
