@@ -5,7 +5,7 @@ import random
 import pandas as pd
 import csv
 import numpy as np
-import matplotlib
+import cv2
 import matplotlib.pyplot as plt
 
 
@@ -46,6 +46,7 @@ def assign_object_id(targets, histbase):
     # todo :
     color_description = {0: "Czerwony", 1: "Niebieski",
                          2: "Zielony", np.NaN: "Niezidentyfikowany"}
+
     best_norm = np.inf
     car_id = np.NaN
     car_ids = []
@@ -53,6 +54,10 @@ def assign_object_id(targets, histbase):
 
     for target in targets:
         for idx, histogram in enumerate(histbase):
+            # temporary - could be improved by saving normalize histbase
+            target = target / np.sum(target)
+            histogram = histogram / np.sum(histogram)
+
             norm = np.linalg.norm(histogram - target)
 
             if norm < best_norm:
@@ -152,7 +157,6 @@ def updateSendedBaseAndGetCarIds(detectedColors, sBase, rBase, idFactor=100):
 #   DELETE IT
 def load_hist_to_mem(folder):
     filenames = os.listdir(folder)
-    filenames.remove("kasujto")
     for filename in filenames:
         with open(f"{folder}\\{filename}", newline='') as f:
             reader = pd.read_csv(f).values
@@ -165,4 +169,36 @@ def print_hist(histogram):
     plt.plot(histogram[:, 1], "g")
     plt.plot(histogram[:, 2], "b")
 
-    
+
+def save_hist_to_mem(histsRGB, color):
+
+    x = 0
+
+    for i, histRGB in enumerate(histsRGB):
+        path = {"red": "toDelete/red", "green": "toDelete/green", "blue": "toDelete/blue"}
+        filenames = os.listdir(path[color])
+        filenames = [int(name[5]) for name in filenames]
+
+        if filenames:
+            pd.DataFrame(histRGB).to_csv(f"{path[color]}/auto_{max(filenames) + 1}.csv")
+        else:
+            pd.DataFrame(histRGB).to_csv(f"{path[color]}/auto_{0}.csv")
+
+
+def update_hist_base(color):
+
+    path = {"red": "toDelete/red", "green": "toDelete/green", "blue": "toDelete/blue"}
+    hists = list(load_hist_to_mem(path[color]))
+    num_of_samples = len(hists)
+
+    sum_of_hist = 0
+    for hist in hists:
+        sum_of_hist += hist
+
+    return sum_of_hist / num_of_samples
+
+# print_hist(update_hist_base('green'))
+# plt.show()
+#
+# print_hist(update_hist_base('blue'))
+# plt.show()
