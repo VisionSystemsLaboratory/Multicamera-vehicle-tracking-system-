@@ -1,17 +1,30 @@
 Multicamera Vehicle tracking system
 
 pojedynczy histogram - macierz 256x3 (256 wierszy, 3 kolumny)
-Baza samochodów - pliki csv zawierające histogramy samochodów.
-Baza wykrytych samochodów - pliki txt/csv zawierające ID oraz kolor/nazwę obiektu z bazy samochodów.
+"Baza samochodów" - pliki csv zawierające histogramy samochodów, obliczone przed rozpoczęciem programu.
+"Baza wykrytych samochodów" - pliki txt zawierające rozpoznany kolor oraz ID samochodu.
 
-Działanie programu:
-0. Baza samochodów zawiera pliki csv, zawierające wcześniej wyliczone histogramy.
-1. Obiekt wjeżdza w zakres kamery.
-2. Histogram jest liczony na bieżąco (gdy żaden z samochodów nie wystaje poza ramkę obrazu).
-3. Program klasyfikuje auta na bazie porównania z bazą samochodów.
-4. Aplikacja sprawdza czy autko jest już w bazie wykrytych samochodów.
-5. Jeżeli jest to nic się nie dzieje (ewentualnie podmienia histogram na bardziej aktualny).
-   Jeśli nie ma to tworzony jest nowy plik wykrytego samochodu zawierający dane o nim.
-6. Usunięcie samochodu z bazy wykrytych samochodów (gdy histogram z bazy nie pasuje do żadnego auta).
-x. Pliki są udostępniane pomiędzy RPi gdy tylko nowy plik pojawi się w folderze.
+Współdzielenie informacji pomiędzy kamerami, odbywa się poprzez następujące foldery:
+- Received (zawiera pliki "Baza wykrytych samochodów" pochodzące z drugiej kamery)
+- Sended (zawiera pliki "Baza wykrytych samochodów" pochodzące z wybranej kamery)
+Pliki są przesyłane z jednej kamery (folder Sended) do drugiej (folder Received) w momencie pojawienia się nowego pliku w folderze Sended.
 
+
+Działanie systemu śledzenia:
+0. W celu przyspieszenia działania aplikacji dokonywana jest zmiana rozmiaru przechwyconego obrazu (dla obliczania histogramów).
+1. Przechwycenie ramki obrazu.
+2. Binaryzacja obrazu. Pozbycie się szumów kolejno poprzez dokonanie operacji takich jak dylatacja oraz erozja. Binaryzacja obrazu na
+   podstawie ustalonego progu, poniżej którego obszar jest traktowany jako tło.
+3. Zabezpieczenie przed niepotrzebnymi obliczeniami. Obliczanie wartości histogramów następuje w momencie gdy klasyfikator SAD przekroczy pewien próg 
+   (nastąpi przekroczenie thresholdu związanego z ilością pikseli odpowiadającym wartswie tła).
+   4. Uaktualnienie bazy received (lokalna "Baza wykrytych samochodów" pochodząca z drugiej kamery, uaktualniana wraz z pojawieniem się nowego pliku
+      w folderze Received).
+   5. Indeksacja maski binarnej.
+   6. Wyliczenie histogramów dla wykrytych obiektów na podstawie maski pochodzącej z indeksacji obrazu. Histogramy obliczane są tylko dla obiektów,
+      które w całości pojawiły się w przestrzeni obejmowanej przez obiektyw kamery.
+   7. Identyfikacja wykrytych pojazdów (dopasowanie obliczonych histogramów do histogramów pochodzących z "Bazy samochodów").
+   8. Nadanie numeru Id dla wykrytych obiektów. Algorytm w pierwszej kolejności sprawdza czy obiekt został wykryty przez drugą kamerę, jeśli tak
+      to nadaje mu już istniejące Id. W przeciwnym przypadku sprawdza, czy auto zostało już wykryte przez aktualną kamerę. Jeśli tak to samochodowi
+      jest przypisywane istniejące Id, w przeciwnym razie samochód otrzymuje nowe Id i zostaje zapisany do nowego pliku txt w folderze Sended, w którym
+      następuje automatyczne przesłanie dodanego pliku do drugiej kamery do folderu Received.
+   9. Wyświetlenie bounding boxa oraz numeru Id dla każdego wykrytego pojazdu.
