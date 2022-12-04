@@ -56,9 +56,8 @@ def assign_object_id(targets, histbase):
         for idx, histogram in enumerate(histbase):
             # temporary - could be improved by saving normalize histbase
             target = target / np.sum(target)
-            histogram = histogram / np.sum(histogram)
 
-            norm = np.linalg.norm(histogram - target)
+            # norm = np.linalg.norm(histogram - target)
             score = cv2.compareHist(histogram.astype("float32"), target.astype('float32'), method=cv2.HISTCMP_INTERSECT)
 
             if score > 0.5:
@@ -179,11 +178,12 @@ def print_hist(histogram):
 def save_hist_to_mem(histsRGB, color):
 
     x = 0
-
     for i, histRGB in enumerate(histsRGB):
         path = {"red": "toDelete/red", "green": "toDelete/green", "blue": "toDelete/blue"}
         filenames = os.listdir(path[color])
-        filenames = [int(name[5]) for name in filenames]
+
+        if filenames:
+            filenames = [int(name[5]) for name in filenames]
 
         if filenames:
             pd.DataFrame(histRGB).to_csv(f"{path[color]}/auto_{max(filenames) + 1}.csv")
@@ -194,6 +194,7 @@ def save_hist_to_mem(histsRGB, color):
 def update_hist_base(color):
 
     path = {"red": "toDelete/red", "green": "toDelete/green", "blue": "toDelete/blue"}
+    number_color_encoding = {"red": 0, "green": 1, "blue": 2}
     hists = list(load_hist_to_mem(path[color]))
     num_of_samples = len(hists)
 
@@ -201,10 +202,7 @@ def update_hist_base(color):
     for hist in hists:
         sum_of_hist += hist
 
-    return sum_of_hist / num_of_samples
+    avg = sum_of_hist / num_of_samples
+    pd.DataFrame(avg / np.sum(avg)).to_csv(f"Hists/auto_{number_color_encoding[color]}.csv")
 
-# print_hist(update_hist_base('green'))
-# plt.show()
-#
-# print_hist(update_hist_base('blue'))
-# plt.show()
+
