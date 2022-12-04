@@ -47,7 +47,7 @@ def assign_object_id(targets, histbase):
     color_description = {0: "Czerwony", 1: "Niebieski",
                          2: "Zielony", np.NaN: "Niezidentyfikowany"}
 
-    best_norm = np.inf
+    best_norm = 0
     car_id = np.NaN
     car_ids = []
     threshold = np.inf  # miara dopasowania
@@ -59,17 +59,23 @@ def assign_object_id(targets, histbase):
             histogram = histogram / np.sum(histogram)
 
             norm = np.linalg.norm(histogram - target)
+            score = cv2.compareHist(histogram.astype("float32"), target.astype('float32'), method=cv2.HISTCMP_INTERSECT)
 
-            if norm < best_norm:
-                best_norm = norm
-                if best_norm < threshold:
+            if score > 0.5:
+                if score > best_norm:
+                    best_norm = score
                     car_id = idx
-                else:
-                    car_id = np.NaN
+            # if norm < best_norm:
+            #     best_norm = norm
+            #     if best_norm < threshold:
+            #         car_id = idx
+            #     else:
+            #         car_id = np.NaN
 
         print(f"Best norm is: {best_norm}")
         car_ids.append(color_description[car_id])
         best_norm = np.inf
+        car_id = np.NaN
 
     return car_ids
 
